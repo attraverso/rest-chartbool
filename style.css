@@ -18,15 +18,15 @@ body {
 }
 
 .canva-container-1 {
-  /* margin-top: 100px; */
   grid-row: 1;
   grid-column: 1;
   background-color: #fff;
+  padding: 10px 0;
 }
 
 .canva-container-2 {
-  /* margin-top: 100px; */
   grid-row: 1;
   grid-column: 3;
   background-color: #fff;
+  padding: 10px 0;
 }
