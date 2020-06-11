@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-aTeam();
+drawCharts();
 
 $('.salesman option').click(function() {
   $('.salesman option').removeClass('current');
@@ -26,7 +26,7 @@ $('#submit-post').click(function() {
       'amount': amount,
     },
     'success': function(data) {
-      aTeam();
+      drawCharts();
     },
     'error': function() {
       alert('Oops...');
@@ -34,14 +34,15 @@ $('#submit-post').click(function() {
   })
 })
 
-function aTeam() {
+function drawCharts() {
   $.ajax({
     'url': 'http://157.230.17.132:4031/sales',
     'method': 'get',
     'success': function(data) {
       let salesTotal = totalSales(data);
-      chartSalesPerMonth(data);
-      chartTotalSalesPerEmployee(data, salesTotal);
+      getSalesPerMonth(data);
+      getTotalSalesPerEmployee(data, salesTotal);
+      getQuarterData(data);
     },
     'error': function() {
       alert('Apparently a rabbit ate your number...');
@@ -58,7 +59,7 @@ function totalSales(data) {
   return salesTotal;
 }
 
-function chartSalesPerMonth(data) {
+function getSalesPerMonth(data) {
   let monthlyIncome = {
     'January': 0,
     'February': 0,
@@ -115,10 +116,10 @@ function chartSalesPerMonth(data) {
   }
   let keys = Object.keys(monthlyIncome);
   let values = Object.values(monthlyIncome);
-  chartMonthly(keys, values);
+  drawMonthly(keys, values);
 }
 
-function chartMonthly(labels, values) {
+function drawMonthly(labels, values) {
   var ctx = $('#month')[0].getContext('2d');
   var chartID = new Chart(ctx, {
     type: 'line',
@@ -159,17 +160,18 @@ function chartMonthly(labels, values) {
     }]
   },
   options: {
-      legend: {
-        // display: false,
-        position: 'bottom',
-      },
-      scales: {
+     scales: {
+       yAxes: [{
+         ticks: {
+           beginAtZero: true
+        }
+      }]
     }
   }
   });
 }
 
-function chartTotalSalesPerEmployee(data, totalSales) {
+function getTotalSalesPerEmployee(data, totalSales) {
   console.log(data, totalSales);
   let salespeopleTotals = {};
   for (var i = 0; i < data.length; i++) {
@@ -188,11 +190,11 @@ function chartTotalSalesPerEmployee(data, totalSales) {
   }
   let keys = Object.keys(salespeopleTotals);
   let values = Object.values(salespeopleTotals);
-  chartSalesmen(keys, values);
+  drawSalesmen(keys, values);
 }
 
-function chartSalesmen(labels, values) {
-  console.log(labels, values);
+function drawSalesmen(labels, values) {
+  // console.log(labels, values);
   var ctx = $('#sellers')[0].getContext('2d');
   var chartID = new Chart(ctx, {
     type: 'pie',
@@ -224,6 +226,95 @@ function chartSalesmen(labels, values) {
       scales: {
     }
   }
+  });
+}
+
+function getQuarterData(data) {
+  let quarterSalesNr = {
+    '1st': 0,
+    '2nd': 0,
+    '3rd': 0,
+    '4th': 0,
+  };
+  for (var i = 0; i < data.length; i++) {
+    let currentMonth = data[i].date.substr(3,2);
+    switch(currentMonth) {
+      case '01':
+      quarterSalesNr['1st'] += 1;
+      break;
+      case '02':
+      quarterSalesNr['1st'] += 1;
+      break;
+      case '03':
+      quarterSalesNr['1st'] += 1;
+      break;
+      case '04':
+      quarterSalesNr['2nd'] += 1;
+      break;
+      case '05':
+      quarterSalesNr['2nd'] += 1;
+      break;
+      case '06':
+      quarterSalesNr['2nd'] += 1;
+      break;
+      case '07':
+      quarterSalesNr['3rd'] += 1;
+      break;
+      case '08':
+      quarterSalesNr['3rd'] += 1;
+      break;
+      case '09':
+      quarterSalesNr['3rd'] += 1;
+      break;
+      case '10':
+      quarterSalesNr['4th'] += 1;
+      break;
+      case '11':
+      quarterSalesNr['4th'] += 1;
+      break;
+      case '12':
+      quarterSalesNr['4th'] += 1;
+    }
+  }
+let keys = Object.keys(quarterSalesNr);
+let values = Object.values(quarterSalesNr);
+drawQuarterly(keys, values);
+}
+
+function drawQuarterly(labels, values) {
+  console.log(labels, values);
+  var ctx = $('#quarterly')[0].getContext('2d');
+  var chartID = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: '# of sales in Quarter',
+        data: values,
+        backgroundColor: [
+           'rgba(255, 99, 132, 0.2)',
+           'rgba(54, 162, 235, 0.2)',
+           'rgba(255, 206, 86, 0.2)',
+           'rgba(75, 192, 192, 0.2)'
+        ],
+        borderColor: [
+           'rgba(255, 99, 132, 1)',
+           'rgba(54, 162, 235, 1)',
+           'rgba(255, 206, 86, 1)',
+           'rgba(75, 192, 192, 1)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+       scales: {
+         yAxes: [{
+           ticks: {
+             beginAtZero: true
+          }
+        }]
+      }
+    }
   });
 }
 
