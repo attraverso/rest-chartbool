@@ -69,23 +69,60 @@ function chart(chartID, chartType, processedData) {
 
 function salesPerMonth(data, obj) {
   let monthlyIncome = {
-    '01': 0,
-    '02': 0,
-    '03': 0,
-    '04': 0,
-    '05': 0,
-    '06': 0,
-    '07': 0,
-    '08': 0,
-    '09': 0,
-    '10': 0,
-    '11': 0,
-    '12': 0,
+    'January': 0,
+    'February': 0,
+    'March': 0,
+    'April': 0,
+    'May': 0,
+    'June': 0,
+    'July': 0,
+    'August': 0,
+    'September': 0,
+    'October': 0,
+    'November': 0,
+    'December': 0,
   };
   for (var i = 0; i < data.length; i++) {
     let currentMonth = data[i].date.substr(3,2);
     console.log(currentMonth);
-    monthlyIncome[currentMonth] += data[i].amount;
+    switch(currentMonth) {
+      case '01':
+      monthlyIncome['January'] += data[i].amount;
+      break;
+      case '02':
+      monthlyIncome['February'] += data[i].amount;
+      break;
+      case '03':
+      monthlyIncome['March'] += data[i].amount;
+      break;
+      case '04':
+      monthlyIncome['April'] += data[i].amount;
+      break;
+      case '05':
+      monthlyIncome['May'] += data[i].amount;
+      break;
+      case '06':
+      monthlyIncome['June'] += data[i].amount;
+      break;
+      case '07':
+      monthlyIncome['July'] += data[i].amount;
+      break;
+      case '08':
+      monthlyIncome['August'] += data[i].amount;
+      break;
+      case '09':
+      monthlyIncome['September'] += data[i].amount;
+      break;
+      case '10':
+      monthlyIncome['October'] += data[i].amount;
+      break;
+      case '11':
+      monthlyIncome['November'] += data[i].amount;
+      break;
+      case '12':
+      monthlyIncome['December'] += data[i].amount;
+    }
+    // monthlyIncome[currentMonth] += data[i].amount;
   }
   console.log(monthlyIncome);
   return monthlyIncome;
@@ -111,12 +148,9 @@ function totalSalesPerEmployee(data, totalSales) {
   }
   for (var key in salespeopleTotals) {
     let totalNr = salespeopleTotals[key];
-    console.log(totalNr);
     let percentage = (totalNr / totalSales) * 100;
     let chartPercent = percentage.toFixed(2);
-    console.log(chartPercent);
     salespeopleTotals[key] = chartPercent;
-    console.log(salespeopleTotals);
   }
   return salespeopleTotals;
 }
