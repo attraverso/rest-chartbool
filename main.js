@@ -128,7 +128,9 @@ function drawMonthly(labels, values) {
       datasets: [{
         label: 'Volume of Sales per Month',
         data: values,
-        backgroundColor: [
+        backgroundColor: 'transparent',
+        borderColor: 'rebeccapurple',
+        pointBackgroundColor: [
           'rgba(255, 99, 132, 0.2)',
           'rgba(54, 162, 235, 0.2)',
           'rgba(255, 206, 86, 0.2)',
@@ -142,7 +144,7 @@ function drawMonthly(labels, values) {
           'rgba(153, 102, 255, 0.2)',
           'rgba(255, 159, 64, 0.2)',
         ],
-        borderColor: [
+        pointBorderColor: [
           'rgba(255, 99, 132, 1)',
           'rgba(54, 162, 235, 1)',
           'rgba(255, 206, 86, 1)',
@@ -166,6 +168,13 @@ function drawMonthly(labels, values) {
            beginAtZero: true
         }
       }]
+    },
+    legend: {
+      display: false,
+    },
+    title: {
+      display: true,
+      text: 'Volume of sales per month'
     }
   }
   });
@@ -219,11 +228,12 @@ function drawSalesmen(labels, values) {
     }]
   },
   options: {
-      legend: {
-        // display: false,
-        position: 'bottom',
-      },
-      scales: {
+    legend: {
+      position: 'bottom',
+    },
+    title: {
+      display: true,
+      text: '% of sales per salesperson'
     }
   }
   });
@@ -238,47 +248,19 @@ function getQuarterData(data) {
   };
   for (var i = 0; i < data.length; i++) {
     let currentMonth = data[i].date.substr(3,2);
-    switch(currentMonth) {
-      case '01':
+    if (currentMonth == '01' || currentMonth == '02' || currentMonth == '03') {
       quarterSalesNr['1st'] += 1;
-      break;
-      case '02':
-      quarterSalesNr['1st'] += 1;
-      break;
-      case '03':
-      quarterSalesNr['1st'] += 1;
-      break;
-      case '04':
+    } else if (currentMonth == '04' || currentMonth == '05' || currentMonth == '06') {
       quarterSalesNr['2nd'] += 1;
-      break;
-      case '05':
-      quarterSalesNr['2nd'] += 1;
-      break;
-      case '06':
-      quarterSalesNr['2nd'] += 1;
-      break;
-      case '07':
+    } else if (currentMonth == '07' || currentMonth == '08' || currentMonth == '09') {
       quarterSalesNr['3rd'] += 1;
-      break;
-      case '08':
-      quarterSalesNr['3rd'] += 1;
-      break;
-      case '09':
-      quarterSalesNr['3rd'] += 1;
-      break;
-      case '10':
-      quarterSalesNr['4th'] += 1;
-      break;
-      case '11':
-      quarterSalesNr['4th'] += 1;
-      break;
-      case '12':
+    } else {
       quarterSalesNr['4th'] += 1;
     }
   }
-let keys = Object.keys(quarterSalesNr);
-let values = Object.values(quarterSalesNr);
-drawQuarterly(keys, values);
+  let keys = Object.keys(quarterSalesNr);
+  let values = Object.values(quarterSalesNr);
+  drawQuarterly(keys, values);
 }
 
 function drawQuarterly(labels, values) {
@@ -292,27 +274,34 @@ function drawQuarterly(labels, values) {
         label: '# of sales in Quarter',
         data: values,
         backgroundColor: [
-           'rgba(255, 99, 132, 0.2)',
-           'rgba(54, 162, 235, 0.2)',
-           'rgba(255, 206, 86, 0.2)',
-           'rgba(75, 192, 192, 0.2)'
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(255, 99, 132, 0.2)'
         ],
         borderColor: [
-           'rgba(255, 99, 132, 1)',
-           'rgba(54, 162, 235, 1)',
-           'rgba(255, 206, 86, 1)',
-           'rgba(75, 192, 192, 1)'
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(255, 99, 132, 1)',
         ],
         borderWidth: 1
       }]
     },
     options: {
-       scales: {
-         yAxes: [{
-           ticks: {
-             beginAtZero: true
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
           }
         }]
+      },
+      legend: {
+        display: false,
+      },
+      title: {
+        display: true,
+        text: 'Number of sales per quarter',
       }
     }
   });

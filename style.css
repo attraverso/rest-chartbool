@@ -8,15 +8,6 @@ body {
   background-color: #ccc;
 }
 
-.charts-container {
-  width: 80%;
-  margin: auto;
-  display: grid;
-  grid-template-rows: 45vh 10vh 45vh;
-  grid-template-columns: repeat(3, 1fr);
-  align-items: center;
-}
-
 .canva-container-1,
 .canva-container-2,
 .canva-container-3 {
@@ -24,26 +15,40 @@ body {
   padding 10px 0;
 }
 
+.canva-container-1,
+.canva-container-2 {
+  align-self: end;
+}
+
 .canva-container-1 {
-  grid-row: 1;
+  grid-row: header-end;
   grid-column: 1;
 }
 
 .canva-container-2 {
-  grid-row: 1;
+  grid-row: header-end;
   grid-column: 3;
+}
+
+.canva-container-3 {
+  text-align: center;
+  grid-row: middle-end;
+  grid-column: 2;
+  align-self: start;
+}
+
+.charts-container {
+  width: 90%;
+  margin: auto;
+  display: grid;
+  grid-template-rows: [header-start] 10vh [header-end] 40vh [middle-start] 10vh [middle-end] 40vh;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
 }
 
 .input-container {
   text-align: center;
-  grid-row: 2;
+  grid-row: header-start;
   grid-column: 2;
-  align-self: start;
-
-}
-.canva-container-3 {
-  text-align: center;
-  grid-row: 3;
-  grid-column: 2;
-  align-self: start;
+  align-self: center;
 }
