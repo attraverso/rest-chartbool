@@ -13,25 +13,38 @@ $('.month option').click(function() {
 })
 
 $('#submit-post').click(function() {
-  let salesman = $('.salesman option.current').text();
-  let date = '01/' + $('.month option.current').val() + '/2017';
+  // let salesman = $('.salesman option.current').text();
+  // let date = '01/' + $('.month option.current').val() + '/2017';
+  // let amount = $('input').val();
+
+  let salesperson = $('.salesperson').val();
+  let date = '01/' + $('.month').val() + '/2017';
   let amount = $('input').val();
-  // console.log(salesman, data, amount);
-  $.ajax({
-    'url': 'http://157.230.17.132:4031/sales',
-    'method': 'post',
-    'data': {
-      'salesman': salesman,
-      'date': date,
-      'amount': amount,
-    },
-    'success': function(data) {
-      drawCharts();
-    },
-    'error': function() {
-      alert('Oops...');
-    }
-  })
+    // console.log(salesman, data, amount);
+
+  if (salesperson != '' && date != '' && amount > 0) {
+    $('.salesperson').val('');
+    $('.month').val('');
+    $('input').val('');
+    console.log(salesperson, date, amount);
+    $.ajax({
+      'url': 'http://157.230.17.132:4031/sales',
+      'method': 'post',
+      'data': {
+        'salesman': salesperson,
+        'date': date,
+        'amount': amount,
+      },
+      'success': function(data) {
+        drawCharts();
+      },
+      'error': function() {
+        alert('Oops...');
+      }
+    })
+  } else {
+    alert('There\'s a problem with your data. Try again.')
+  }
 })
 
 function drawCharts() {
