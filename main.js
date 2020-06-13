@@ -2,24 +2,14 @@ $(document).ready(function() {
   const api_url = 'http://157.230.17.132:4031/sales';
 /*draw charts with initial data from API*/
 drawCharts(false);
-/*  */
-$('.salesman option').click(function() {
-  $('.salesman option').removeClass('current');
-  $(this).addClass('current');
-})
-
-$('.month option').click(function() {
-  $('.month option').removeClass('current');
-  $(this).addClass('current');
-})
-
+/* on click on submit btn, send user-inputed data to API */
 $('#submit-post').click(function() {
   let salesperson = $('.salesperson').val();
   let date = '01/' + $('.month').val() + '/2017';
   let amount = $('input').val();
-  // $('div[class~=canva-container]').empty();
-
+  /* check whether user input is valid */
   if (salesperson != '' && date != '' && amount > 0) {
+    /* empty fields */
     $('.salesperson').val('');
     $('.month').val('');
     $('input').val('');
@@ -32,6 +22,7 @@ $('#submit-post').click(function() {
         'amount': amount,
       },
       'success': function(data) {
+        /* update charts */
         drawCharts(true);
       },
       'error': function() {
@@ -39,9 +30,11 @@ $('#submit-post').click(function() {
       }
     })
   } else {
-    alert('There\'s a problem with your data. Try again.')
+    alert('There\'s a problem with your data. Please check and try again.')
   }
 })
+
+/* * * FUNCTIONS * * */
 
 function drawCharts(update) {
   $.ajax({
@@ -82,7 +75,8 @@ function getSalesPerMonth(data, update) {
     'November': 0,
     'December': 0,
   };
-  for (var i = 0; i < data.length; i++) {
+
+  for (let i = 0; i < data.length; i++) {
     let currentMonth = data[i].date.substr(3,2);
     switch(currentMonth) {
       case '01':
@@ -124,13 +118,29 @@ function getSalesPerMonth(data, update) {
   }
   let keys = Object.keys(monthlyIncome);
   let values = Object.values(monthlyIncome);
+  populateMonthOptions(keys);
   if (!update) {
+    /* the first time, draw the chart */
     drawMonthly(keys, values);
   } else {
+    /* if it's an update, overwrite the data in the Chart object and update it */
     monthlyChart.config.data.datasets[0].data = values;
     monthlyChart.update();
   }
 }
+
+function populateMonthOptions(months) {
+  $('.month').empty();
+  $('.month').append(`<option value="">-- Choose option</option>`)
+  for (let i = 0; i < months.length; i++) {
+    let monthNr = i +1;
+    if (monthNr < 10) {
+      monthNr = '0' + monthNr;
+    }
+    $('.month').append(`<option value="${monthNr}"> ${months[i]} </option>`);
+  }
+}
+
 
 function drawMonthly(labels, values) {
   $('.canva-container-monthly').empty();
@@ -214,11 +224,20 @@ function getTotalSalesPerEmployee(data, totalSales, update) {
   }
   let keys = Object.keys(salespeopleTotals);
   let values = Object.values(salespeopleTotals);
+  populateSalespeopleOptions(keys);
   if (!update) {
     drawSalesmen(keys, values);
   } else {
     salesmenChart.config.data.datasets[0].data = values;
     salesmenChart.update();
+  }
+}
+
+function populateSalespeopleOptions(salespeople) {
+  $('.salesperson').empty();
+  $('.salesperson').append(`<option value="">-- Choose option</option>`)
+  for (let i = 0; i < salespeople.length; i++) {
+    $('.salesperson').append(`<option value="${salespeople[i]}"> ${salespeople[i]} </option>`);
   }
 }
 
