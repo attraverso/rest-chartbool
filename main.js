@@ -1,6 +1,7 @@
 $(document).ready(function() {
+  const api_url = 'http://157.230.17.132:4031/sales';
 /*draw charts with initial data from API*/
-drawCharts();
+drawCharts(false);
 /*  */
 $('.salesman option').click(function() {
   $('.salesman option').removeClass('current');
@@ -22,9 +23,8 @@ $('#submit-post').click(function() {
     $('.salesperson').val('');
     $('.month').val('');
     $('input').val('');
-    console.log(salesperson, date, amount);
     $.ajax({
-      'url': 'http://157.230.17.132:4031/sales',
+      'url': api_url,
       'method': 'post',
       'data': {
         'salesman': salesperson,
@@ -32,7 +32,7 @@ $('#submit-post').click(function() {
         'amount': amount,
       },
       'success': function(data) {
-        drawCharts();
+        drawCharts(true);
       },
       'error': function() {
         alert('Oops...');
@@ -43,15 +43,15 @@ $('#submit-post').click(function() {
   }
 })
 
-function drawCharts() {
+function drawCharts(update) {
   $.ajax({
-    'url': 'http://157.230.17.132:4031/sales',
+    'url': api_url,
     'method': 'get',
     'success': function(data) {
       let salesTotal = totalSales(data);
-      getSalesPerMonth(data);
-      getTotalSalesPerEmployee(data, salesTotal);
-      getQuarterData(data);
+      getSalesPerMonth(data, update);
+      getTotalSalesPerEmployee(data, salesTotal, update);
+      getQuarterData(data, update);
     },
     'error': function() {
       alert('Apparently a rabbit ate your number...');
@@ -64,11 +64,10 @@ function totalSales(data) {
   for (var i = 0; i < data.length; i++) {
     salesTotal += parseFloat(data[i].amount);
   }
-  console.log(salesTotal);
   return salesTotal;
 }
 
-function getSalesPerMonth(data) {
+function getSalesPerMonth(data, update) {
   let monthlyIncome = {
     'January': 0,
     'February': 0,
@@ -125,15 +124,20 @@ function getSalesPerMonth(data) {
   }
   let keys = Object.keys(monthlyIncome);
   let values = Object.values(monthlyIncome);
-  drawMonthly(keys, values);
+  if (!update) {
+    drawMonthly(keys, values);
+  } else {
+    monthlyChart.config.data.datasets[0].data = values;
+    monthlyChart.update();
+  }
 }
 
 function drawMonthly(labels, values) {
   $('.canva-container-monthly').empty();
   $('.canva-container-monthly').append('<canvas id="monthly"></canvas>');
 
-  var ctx = $('#monthly')[0].getContext('2d');
-  var chartID = new Chart(ctx, {
+  let ctx = $('#monthly')[0].getContext('2d');
+  monthlyChart = new Chart(ctx, {
     type: 'line',
     data: {
       labels: labels,
@@ -192,8 +196,7 @@ function drawMonthly(labels, values) {
   });
 }
 
-function getTotalSalesPerEmployee(data, totalSales) {
-  console.log(data, totalSales);
+function getTotalSalesPerEmployee(data, totalSales, update) {
   let salespeopleTotals = {};
   for (var i = 0; i < data.length; i++) {
     let currentSalesman = data[i].salesman;
@@ -211,16 +214,20 @@ function getTotalSalesPerEmployee(data, totalSales) {
   }
   let keys = Object.keys(salespeopleTotals);
   let values = Object.values(salespeopleTotals);
-  drawSalesmen(keys, values);
+  if (!update) {
+    drawSalesmen(keys, values);
+  } else {
+    salesmenChart.config.data.datasets[0].data = values;
+    salesmenChart.update();
+  }
 }
 
 function drawSalesmen(labels, values) {
   $('.canva-container-sellers').empty();
   $('.canva-container-sellers').append('<canvas id="sellers"></canvas>');
 
-  // console.log(labels, values);
-  var ctx = $('#sellers')[0].getContext('2d');
-  var chartID = new Chart(ctx, {
+  let ctx = $('#sellers')[0].getContext('2d');
+  salesmenChart = new Chart(ctx, {
     type: 'pie',
     data: {
       labels: labels,
@@ -263,7 +270,7 @@ function drawSalesmen(labels, values) {
   });
 }
 
-function getQuarterData(data) {
+function getQuarterData(data, update) {
   let quarterSalesNr = {
     '1st': 0,
     '2nd': 0,
@@ -284,16 +291,20 @@ function getQuarterData(data) {
   }
   let keys = Object.keys(quarterSalesNr);
   let values = Object.values(quarterSalesNr);
-  drawQuarterly(keys, values);
+  if (!update) {
+    drawQuarterly(keys, values);
+  } else {
+    quarterlyChart.config.data.datasets[0].data = values;
+    quarterlyChart.update();
+  }
 }
 
 function drawQuarterly(labels, values) {
   $('.canva-container-quarterly').empty();
   $('.canva-container-quarterly').append('<canvas id="quarterly"></canvas>');
 
-  console.log(labels, values);
-  var ctx = $('#quarterly')[0].getContext('2d');
-  var chartID = new Chart(ctx, {
+  let ctx = $('#quarterly')[0].getContext('2d');
+  quarterlyChart = new Chart(ctx, {
     type: 'bar',
     data: {
       labels: labels,
