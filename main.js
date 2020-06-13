@@ -1,7 +1,7 @@
 $(document).ready(function() {
-
+/*draw charts with initial data from API*/
 drawCharts();
-
+/*  */
 $('.salesman option').click(function() {
   $('.salesman option').removeClass('current');
   $(this).addClass('current');
@@ -13,14 +13,10 @@ $('.month option').click(function() {
 })
 
 $('#submit-post').click(function() {
-  // let salesman = $('.salesman option.current').text();
-  // let date = '01/' + $('.month option.current').val() + '/2017';
-  // let amount = $('input').val();
-
   let salesperson = $('.salesperson').val();
   let date = '01/' + $('.month').val() + '/2017';
   let amount = $('input').val();
-    // console.log(salesman, data, amount);
+  // $('div[class~=canva-container]').empty();
 
   if (salesperson != '' && date != '' && amount > 0) {
     $('.salesperson').val('');
@@ -66,7 +62,7 @@ function drawCharts() {
 function totalSales(data) {
   let salesTotal = 0;
   for (var i = 0; i < data.length; i++) {
-    salesTotal += parseInt(data[i].amount);
+    salesTotal += parseFloat(data[i].amount);
   }
   console.log(salesTotal);
   return salesTotal;
@@ -91,40 +87,40 @@ function getSalesPerMonth(data) {
     let currentMonth = data[i].date.substr(3,2);
     switch(currentMonth) {
       case '01':
-      monthlyIncome['January'] += parseInt(data[i].amount);
+      monthlyIncome['January'] += parseFloat(data[i].amount);
       break;
       case '02':
-      monthlyIncome['February'] += parseInt(data[i].amount);
+      monthlyIncome['February'] += parseFloat(data[i].amount);
       break;
       case '03':
-      monthlyIncome['March'] += parseInt(data[i].amount);
+      monthlyIncome['March'] += parseFloat(data[i].amount);
       break;
       case '04':
-      monthlyIncome['April'] += parseInt(data[i].amount);
+      monthlyIncome['April'] += parseFloat(data[i].amount);
       break;
       case '05':
-      monthlyIncome['May'] += parseInt(data[i].amount);
+      monthlyIncome['May'] += parseFloat(data[i].amount);
       break;
       case '06':
-      monthlyIncome['June'] += parseInt(data[i].amount);
+      monthlyIncome['June'] += parseFloat(data[i].amount);
       break;
       case '07':
-      monthlyIncome['July'] += parseInt(data[i].amount);
+      monthlyIncome['July'] += parseFloat(data[i].amount);
       break;
       case '08':
-      monthlyIncome['August'] += parseInt(data[i].amount);
+      monthlyIncome['August'] += parseFloat(data[i].amount);
       break;
       case '09':
-      monthlyIncome['September'] += parseInt(data[i].amount);
+      monthlyIncome['September'] += parseFloat(data[i].amount);
       break;
       case '10':
-      monthlyIncome['October'] += parseInt(data[i].amount);
+      monthlyIncome['October'] += parseFloat(data[i].amount);
       break;
       case '11':
-      monthlyIncome['November'] += parseInt(data[i].amount);
+      monthlyIncome['November'] += parseFloat(data[i].amount);
       break;
       case '12':
-      monthlyIncome['December'] += parseInt(data[i].amount);
+      monthlyIncome['December'] += parseFloat(data[i].amount);
     }
   }
   let keys = Object.keys(monthlyIncome);
@@ -133,7 +129,10 @@ function getSalesPerMonth(data) {
 }
 
 function drawMonthly(labels, values) {
-  var ctx = $('#month')[0].getContext('2d');
+  $('.canva-container-monthly').empty();
+  $('.canva-container-monthly').append('<canvas id="monthly"></canvas>');
+
+  var ctx = $('#monthly')[0].getContext('2d');
   var chartID = new Chart(ctx, {
     type: 'line',
     data: {
@@ -199,9 +198,9 @@ function getTotalSalesPerEmployee(data, totalSales) {
   for (var i = 0; i < data.length; i++) {
     let currentSalesman = data[i].salesman;
     if (!salespeopleTotals.hasOwnProperty(currentSalesman)) {
-      salespeopleTotals[currentSalesman] = parseInt(data[i].amount);
+      salespeopleTotals[currentSalesman] = parseFloat(data[i].amount);
     } else {
-      salespeopleTotals[currentSalesman] += parseInt(data[i].amount);
+      salespeopleTotals[currentSalesman] += parseFloat(data[i].amount);
     }
   }
   for (var key in salespeopleTotals) {
@@ -216,6 +215,9 @@ function getTotalSalesPerEmployee(data, totalSales) {
 }
 
 function drawSalesmen(labels, values) {
+  $('.canva-container-sellers').empty();
+  $('.canva-container-sellers').append('<canvas id="sellers"></canvas>');
+
   // console.log(labels, values);
   var ctx = $('#sellers')[0].getContext('2d');
   var chartID = new Chart(ctx, {
@@ -241,6 +243,15 @@ function drawSalesmen(labels, values) {
     }]
   },
   options: {
+    tooltips: {
+      callbacks: {
+        label: function(tooltipItem, data) {
+          let salesperson = data.labels[tooltipItem.index];
+          let sales_percentage = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+          return salesperson + ': ' + sales_percentage + '%';
+        }
+      }
+    },
     legend: {
       position: 'bottom',
     },
@@ -277,6 +288,9 @@ function getQuarterData(data) {
 }
 
 function drawQuarterly(labels, values) {
+  $('.canva-container-quarterly').empty();
+  $('.canva-container-quarterly').append('<canvas id="quarterly"></canvas>');
+
   console.log(labels, values);
   var ctx = $('#quarterly')[0].getContext('2d');
   var chartID = new Chart(ctx, {

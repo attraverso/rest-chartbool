@@ -13,10 +13,12 @@
 
   <body>
     <div class="charts-container">
-      <div class="canva-container-1">
-        <canvas id="month"></canvas>
+      <!--monthly chart-->
+      <div class="canva-container-monthly">
+        <canvas id="monthly"></canvas>
       </div>
-      <div class="canva-container-2"><canvas id="sellers"></canvas></div>
+      <!--salespeople chart-->
+      <div class="canva-container-sellers"><canvas id="sellers"></canvas></div>
       <div class="input-container">
         <p>Submit a new entry</p>
         <select class="salesperson">
@@ -44,7 +46,8 @@
         <input type="number" placeholder="insert sale amount">
         <button id="submit-post" type="button" name="button">Submit</button>
       </div>
-      <div class="canva-container-3"><canvas id="quarterly"></canvas></div>
+      <!--quarter sales chart-->
+      <div class="canva-container-quarterly"><canvas id="quarterly"></canvas></div>
     </div>
   </body>
 </html>

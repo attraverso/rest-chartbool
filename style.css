@@ -9,29 +9,29 @@ body {
   font-family: sans-serif;
 }
 
-.canva-container-1,
-.canva-container-2,
-.canva-container-3 {
+.canva-container-monthly,
+.canva-container-sellers,
+.canva-container-quarterly {
   background-color: #fff;
-  padding 10px 0;
+  padding: 10px 0;
 }
 
-.canva-container-1,
-.canva-container-2 {
+.canva-container-monthly,
+.canva-container-sellers {
   align-self: end;
 }
 
-.canva-container-1 {
+.canva-container-monthly {
   grid-row: header-end;
   grid-column: 1;
 }
 
-.canva-container-2 {
+.canva-container-sellers {
   grid-row: header-end;
   grid-column: 3;
 }
 
-.canva-container-3 {
+.canva-container-quarterly {
   text-align: center;
   grid-row: middle-end;
   grid-column: 2;
